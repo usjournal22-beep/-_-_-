@@ -1,0 +1,2032 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026년 8월 경제활동인구조사 근로형태별 부가조사 대시보드</title>
+  <style>
+    :root {
+      --primary: #1E3A8A;
+      --primary-light: #3B82F6;
+      --primary-dark: #172554;
+      --secondary: #0D9488;
+      --accent: #F59E0B;
+      --danger: #EF4444;
+      --success: #10B981;
+      --gray-50: #F8FAFC;
+      --gray-100: #F1F5F9;
+      --gray-200: #E2E8F0;
+      --gray-300: #CBD5E1;
+      --gray-400: #94A3B8;
+      --gray-500: #64748B;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --gray-800: #1E293B;
+      --gray-900: #0F172A;
+      --card-bg: #FFFFFF;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+      --radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Pretendard", "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: #F3F4F6;
+      color: var(--gray-800);
+      line-height: 1.5;
+      padding-bottom: 60px;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, #1E3A8A 0%, #1E40AF 50%, #0F766E 100%);
+      color: white;
+      padding: 28px 32px 24px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .header-title h1 {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+
+    .header-title p {
+      font-size: 13px;
+      color: #E2E8F0;
+      opacity: 0.9;
+    }
+
+    .header-badges {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 12px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .badge-accent {
+      background: #F59E0B;
+      color: #78350F;
+      border: none;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1400px;
+      margin: -16px auto 0;
+      padding: 0 24px;
+    }
+
+    /* Navigation Tabs */
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      background: white;
+      padding: 8px 12px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+      overflow-x: auto;
+      border: 1px solid var(--gray-200);
+    }
+
+    .tab-btn {
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-600);
+      background: transparent;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover {
+      background: var(--gray-100);
+      color: var(--primary);
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 2px 4px rgba(30, 58, 138, 0.3);
+    }
+
+    /* Tab Content Panels */
+    .tab-panel {
+      display: none;
+      animation: fadeIn 0.25s ease-in-out;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* KPI Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-200);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+
+    .kpi-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--primary-light);
+    }
+
+    .kpi-card.kpi-danger::before { background: var(--danger); }
+    .kpi-card.kpi-success::before { background: var(--success); }
+    .kpi-card.kpi-teal::before { background: var(--secondary); }
+    .kpi-card.kpi-amber::before { background: var(--accent); }
+
+    .kpi-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-500);
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .kpi-value {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--gray-900);
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+
+    .kpi-value span {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-600);
+      margin-left: 4px;
+    }
+
+    .kpi-diff {
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .diff-up { color: var(--danger); }
+    .diff-down { color: var(--primary-light); }
+    .diff-neutral { color: var(--gray-500); }
+
+    .kpi-sub {
+      font-size: 11px;
+      color: var(--gray-500);
+      margin-top: 4px;
+    }
+
+    /* Grid Layouts for Sections */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 1024px) {
+      .grid-2, .grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Cards */
+    .card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-200);
+      margin-bottom: 24px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--gray-100);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--gray-900);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title::before {
+      content: "";
+      display: inline-block;
+      width: 4px;
+      height: 16px;
+      background: var(--primary);
+      border-radius: 2px;
+    }
+
+    .card-subtitle {
+      font-size: 12px;
+      color: var(--gray-500);
+    }
+
+    /* Chart Containers & SVG styles */
+    .chart-container {
+      width: 100%;
+      position: relative;
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+
+    .chart-axis-line {
+      stroke: var(--gray-200);
+      stroke-width: 1;
+    }
+
+    .chart-grid-line {
+      stroke: #E2E8F0;
+      stroke-dasharray: 3, 3;
+      stroke-width: 1;
+    }
+
+    .chart-label {
+      font-size: 11px;
+      fill: var(--gray-500);
+      font-family: inherit;
+    }
+
+    .chart-tooltip {
+      position: absolute;
+      background: rgba(15, 23, 42, 0.92);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      pointer-events: none;
+      display: none;
+      z-index: 100;
+      box-shadow: var(--shadow-lg);
+      white-space: nowrap;
+      line-height: 1.4;
+      backdrop-filter: blur(4px);
+    }
+
+    /* Tables */
+    .table-wrapper {
+      overflow-x: auto;
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      text-align: left;
+    }
+
+    th {
+      background: var(--gray-100);
+      color: var(--gray-700);
+      font-weight: 700;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--gray-200);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--gray-100);
+      color: var(--gray-700);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background-color: #F8FAFC;
+    }
+
+    .text-right { text-align: right; }
+    .text-center { text-align: center; }
+    .font-bold { font-weight: 700; }
+    .font-semibold { font-weight: 600; }
+    .highlight-row { background-color: #F1F5F9; font-weight: 700; }
+
+    /* Summary pill & tag */
+    .pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .pill-blue { background: #DBEAFE; color: #1E40AF; }
+    .pill-green { background: #D1FAE5; color: #065F46; }
+    .pill-amber { background: #FEF3C7; color: #92400E; }
+    .pill-red { background: #FEE2E2; color: #991B1B; }
+    .pill-gray { background: #E2E8F0; color: #475569; }
+
+    /* Search & Filter Bar */
+    .filter-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 220px;
+      padding: 8px 14px;
+      border: 1px solid var(--gray-300);
+      border-radius: 6px;
+      font-size: 13px;
+    }
+
+    .select-input {
+      padding: 8px 14px;
+      border: 1px solid var(--gray-300);
+      border-radius: 6px;
+      font-size: 13px;
+      background: white;
+      min-width: 150px;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s;
+    }
+
+    .btn:hover { background: #1E40AF; }
+    .btn-outline {
+      background: white;
+      color: var(--gray-700);
+      border: 1px solid var(--gray-300);
+    }
+    .btn-outline:hover { background: var(--gray-100); }
+
+    /* Progress / Horizontal Bars */
+    .progress-bar-container {
+      width: 100%;
+      height: 10px;
+      background: var(--gray-100);
+      border-radius: 9999px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 9999px;
+      transition: width 0.6s ease;
+    }
+
+    /* Key Finding Callout */
+    .callout {
+      background: #EFF6FF;
+      border-left: 4px solid var(--primary-light);
+      padding: 14px 18px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: #1E3A8A;
+    }
+
+    .callout-title {
+      font-weight: 700;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Legend */
+    .legend {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 12px;
+      color: var(--gray-600);
+      margin-bottom: 12px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
+
+    /* Footer */
+    footer {
+      max-width: 1400px;
+      margin: 40px auto 0;
+      padding: 20px 24px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--gray-500);
+      border-top: 1px solid var(--gray-200);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Tooltip -->
+  <div id="tooltip" class="chart-tooltip"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <div class="header-title">
+        <h1>2026년 8월 경제활동인구조사 근로형태별 부가조사 대시보드</h1>
+        <p>통계청 보도자료(2026. 10. 21.) 비정규직 근로자 규모 및 근로여건 공식 통계 심층 분석</p>
+      </div>
+      <div class="header-badges">
+        <span class="badge">기준: 2026년 8월 (전국)</span>
+        <span class="badge badge-accent">공식 확정치</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="container">
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('tab-overview')">📌 1. 종합 현황 (Overview)</button>
+      <button class="tab-btn" onclick="switchTab('tab-trend')">📈 2. 근로형태별 시계열 (2019-2026)</button>
+      <button class="tab-btn" onclick="switchTab('tab-structure')">👥 3. 연령·산업·직업별 구조</button>
+      <button class="tab-btn" onclick="switchTab('tab-conditions')">💰 4. 근로조건 및 임금격차</button>
+      <button class="tab-btn" onclick="switchTab('tab-regions')">🗺️ 5. 전국 17개 시도별 고용지도</button>
+      <button class="tab-btn" onclick="switchTab('tab-workstyle')">⏱️ 6. 일자리선택 & 유연근무</button>
+      <button class="tab-btn" onclick="switchTab('tab-data')">🔍 7. 원천 데이터 뷰어 (DB)</button>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- TAB 1: 종합 현황 (Overview) -->
+    <!-- ======================================================== -->
+    <div id="tab-overview" class="tab-panel active">
+      
+      <!-- Key Finding Callout -->
+      <div class="callout">
+        <div class="callout-title">💡 2026년 8월 부가조사 핵심 분석 포인트</div>
+        2026년 8월 비정규직 근로자는 <strong>867만 1천명</strong>으로 전년동월대비 <strong>10만 3천명 증가</strong>하며 역대 최대를 기록했습니다. 
+        임금근로자 중 비정규직 비중은 <strong>38.5% (+0.3%p)</strong>로 상승했으며, 증가세는 주로 <strong>60세 이상 고령층(+13.5만명)</strong>과 <strong>보건·사회복지업(+11.2만명)</strong>, <strong>시간제 근로자(+15.2만명)</strong>가 견인했습니다. 
+        한편, 정규직과 비정규직 간 월평균 임금 격차는 <strong>194.0만원</strong>으로 전년(180.8만원)보다 13.2만원 더 확대되었습니다.
+      </div>
+
+      <!-- KPI Scorecards -->
+      <div class="kpi-grid">
+        <div class="kpi-card kpi-teal">
+          <div class="kpi-title">총 임금근로자</div>
+          <div class="kpi-value">22,526<span>천명</span></div>
+          <div class="kpi-diff diff-up">▲ 113천명 (+0.5%)</div>
+          <div class="kpi-sub">2025년 2,241.3만명 대비</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-title">정규직 근로자</div>
+          <div class="kpi-value">13,855<span>천명</span></div>
+          <div class="kpi-diff diff-neutral">▲ 10천명 (+0.1%)</div>
+          <div class="kpi-sub">임금근로자의 61.5% (-0.3%p)</div>
+        </div>
+
+        <div class="kpi-card kpi-danger">
+          <div class="kpi-title">비정규직 근로자 (역대최대)</div>
+          <div class="kpi-value">8,671<span>천명</span></div>
+          <div class="kpi-diff diff-up">▲ 103천명 (+1.2%)</div>
+          <div class="kpi-sub">임금근로자의 38.5% (+0.3%p)</div>
+        </div>
+
+        <div class="kpi-card kpi-amber">
+          <div class="kpi-title">여성 비정규직 규모</div>
+          <div class="kpi-value">4,963<span>천명</span></div>
+          <div class="kpi-diff diff-up">▲ 46천명 (+0.9%)</div>
+          <div class="kpi-sub">전체 비정규직의 57.2% 차지</div>
+        </div>
+
+        <div class="kpi-card kpi-danger">
+          <div class="kpi-title">정규-비정규 임금 격차</div>
+          <div class="kpi-value">194.0<span>만원</span></div>
+          <div class="kpi-diff diff-up">▲ 13.2만원 격차 확대</div>
+          <div class="kpi-sub">정규 405.2만 vs 비정규 211.2만</div>
+        </div>
+
+        <div class="kpi-card kpi-teal">
+          <div class="kpi-title">60세이상 비정규직</div>
+          <div class="kpi-value">3,180<span>천명</span></div>
+          <div class="kpi-diff diff-up">▲ 135천명 (+4.4%)</div>
+          <div class="kpi-sub">비정규직 중 비중 36.7% (1위)</div>
+        </div>
+      </div>
+
+      <!-- Charts Row 1 -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">임금근로자 고용형태별 구성 및 비중 (2026. 8.)</div>
+              <div class="card-subtitle">정규직 vs 비정규직 세부유형 (단위: 천명, %)</div>
+            </div>
+          </div>
+          <div class="chart-container" style="height: 280px;" id="chart-overview-types"></div>
+          <div class="legend" style="justify-content: center; margin-top: 10px;">
+            <div class="legend-item"><div class="legend-color" style="background:#1E40AF;"></div> 정규직: 13,855천명 (61.5%)</div>
+            <div class="legend-item"><div class="legend-color" style="background:#0D9488;"></div> 한시적: 6,035천명 (26.8%)</div>
+            <div class="legend-item"><div class="legend-color" style="background:#F59E0B;"></div> 시간제: 4,382천명 (19.5%)</div>
+            <div class="legend-item"><div class="legend-color" style="background:#8B5CF6;"></div> 비전형: 1,786천명 (7.9%)</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">비정규직 연령계층별 분포 (2026. 8.)</div>
+              <div class="card-subtitle">총 867.1만명 중 연령대별 비중 및 인원</div>
+            </div>
+          </div>
+          <div class="chart-container" style="height: 280px;" id="chart-overview-age"></div>
+          <div class="legend" style="justify-content: center; margin-top: 10px;">
+            <div class="legend-item"><div class="legend-color" style="background:#3B82F6;"></div> 29세이하: 148.2만 (17.1%)</div>
+            <div class="legend-item"><div class="legend-color" style="background:#10B981;"></div> 30대: 117.8만 (13.6%)</div>
+            <div class="legend-item"><div class="legend-color" style="background:#6366F1;"></div> 40대: 118.4만 (13.7%)</div>
+            <div class="legend-item"><div class="legend-color" style="background:#F59E0B;"></div> 50대: 164.7만 (19.0%)</div>
+            <div class="legend-item"><div class="legend-color" style="background:#EF4444;"></div> 60세이상: 318.0만 (36.7%)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row 2: Conditions Summary -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">정규직 vs 비정규직 근로여건 핵심 지표 비교</div>
+              <div class="card-subtitle">임금, 근속기간, 근로시간 비교 (2026. 8.)</div>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 16px; padding: 10px 0;">
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600;">
+                <span>월평균임금 (최근 3개월 세전)</span>
+                <span>정규 405.2만 vs 비정규 211.2만 (격차 194.0만원)</span>
+              </div>
+              <div class="progress-bar-container" style="height: 14px;">
+                <div class="progress-bar-fill" style="width: 52.1%; background: #EF4444;" title="비정규직은 정규직의 52.1%"></div>
+              </div>
+              <div style="font-size: 11px; color: var(--gray-500); margin-top: 2px;">정규직 대비 비정규직 임금수준: 52.1% (전년 53.6%에서 하락)</div>
+            </div>
+
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600;">
+                <span>평균 근속기간</span>
+                <span>정규 108개월(9년) vs 비정규 36개월(3년)</span>
+              </div>
+              <div class="progress-bar-container" style="height: 14px;">
+                <div class="progress-bar-fill" style="width: 33.3%; background: #F59E0B;" title="비정규직은 정규직의 33.3%"></div>
+              </div>
+              <div style="font-size: 11px; color: var(--gray-500); margin-top: 2px;">정규직 대비 비정규직 근속기간: 33.3% (격차 72개월 = 6년)</div>
+            </div>
+
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600;">
+                <span>주당 평균 취업시간</span>
+                <span>정규 40.4시간 vs 비정규 29.5시간 (격차 10.9시간)</span>
+              </div>
+              <div class="progress-bar-container" style="height: 14px;">
+                <div class="progress-bar-fill" style="width: 73.0%; background: #10B981;" title="비정규직은 정규직의 73.0%"></div>
+              </div>
+              <div style="font-size: 11px; color: var(--gray-500); margin-top: 2px;">정규직 대비 비정규직 취업시간: 73.0% (시간제 근로자 증가 영향)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">3대 사회보험 가입률 격차 (2026. 8.)</div>
+              <div class="card-subtitle">정규직 vs 비정규직 가입률 비교 (%)</div>
+            </div>
+          </div>
+          <div class="chart-container" style="height: 220px;" id="chart-overview-insurance"></div>
+          <div class="legend" style="justify-content: center; margin-top: 10px;">
+            <div class="legend-item"><div class="legend-color" style="background:#1E40AF;"></div> 정규직 가입률</div>
+            <div class="legend-item"><div class="legend-color" style="background:#EF4444;"></div> 비정규직 가입률</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- TAB 2: 근로형태별 시계열 (2019-2026) -->
+    <!-- ======================================================== -->
+    <div id="tab-trend" class="tab-panel">
+      
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">임금근로자 및 정규직·비정규직 규모 추이 (2019 ~ 2026년 8월)</div>
+            <div class="card-subtitle">통계표 1. 시계열 규모 (단위: 천명) 및 비정규직 비중(%)</div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-outline" onclick="renderTrendChart('all')">전체</button>
+            <button class="btn btn-outline" onclick="renderTrendChart('male')">남자</button>
+            <button class="btn btn-outline" onclick="renderTrendChart('female')">여자</button>
+          </div>
+        </div>
+        
+        <div class="legend" style="margin-bottom: 12px;">
+          <div class="legend-item"><div class="legend-color" style="background:#1E40AF;"></div> 임금근로자 총계</div>
+          <div class="legend-item"><div class="legend-color" style="background:#3B82F6;"></div> 정규직 근로자</div>
+          <div class="legend-item"><div class="legend-color" style="background:#EF4444;"></div> 비정규직 근로자</div>
+          <div class="legend-item"><div class="legend-color" style="background:#F59E0B;"></div> 비정규직 비중(%, 우축)</div>
+        </div>
+
+        <div class="chart-container" style="height: 350px;" id="chart-trend-main"></div>
+      </div>
+
+      <!-- Time Series Table -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">통계표 1. 임금근로자의 근로형태별 규모 시계열 원표 (2019 ~ 2026)</div>
+          <span class="pill pill-blue">단위: 천명, %</span>
+        </div>
+        <div class="table-wrapper">
+          <table id="table-timeseries-1">
+            <thead>
+              <tr>
+                <th>성별</th>
+                <th>구분</th>
+                <th class="text-right">2019</th>
+                <th class="text-right">2020</th>
+                <th class="text-right">2021</th>
+                <th class="text-right">2022</th>
+                <th class="text-right">2023</th>
+                <th class="text-right">2024</th>
+                <th class="text-right">2025</th>
+                <th class="text-right">2026</th>
+                <th class="text-right">전년대비증감</th>
+                <th class="text-right">증감률</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-trend">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- TAB 3: 연령·산업·직업별 구조 -->
+    <!-- ======================================================== -->
+    <div id="tab-structure" class="tab-panel">
+      
+      <div class="grid-2">
+        <!-- Age Trend -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">연령계층별 비정규직 비중 시계열 추이 (2019 ~ 2026)</div>
+              <div class="card-subtitle">고령화에 따른 60세 이상 비정규직 비중 급상승 (25.9% → 36.7%)</div>
+            </div>
+          </div>
+          <div class="chart-container" style="height: 320px;" id="chart-age-timeseries"></div>
+          <div class="legend" style="margin-top: 12px; justify-content: center;">
+            <div class="legend-item"><div class="legend-color" style="background:#EF4444;"></div> 60세이상</div>
+            <div class="legend-item"><div class="legend-color" style="background:#F59E0B;"></div> 50대</div>
+            <div class="legend-item"><div class="legend-color" style="background:#10B981;"></div> 40대</div>
+            <div class="legend-item"><div class="legend-color" style="background:#06B6D4;"></div> 30대</div>
+            <div class="legend-item"><div class="legend-color" style="background:#3B82F6;"></div> 20대</div>
+          </div>
+        </div>
+
+        <!-- Occupation Share -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">직업별 비정규직 분포 (2026. 8.)</div>
+              <div class="card-subtitle">단순노무종사자(31.7%) 및 서비스·판매종사자(27.1%)가 과반 차지</div>
+            </div>
+          </div>
+          <div class="chart-container" style="height: 320px;" id="chart-occ-bars"></div>
+        </div>
+      </div>
+
+      <!-- Industry Table & Bar -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">17개 산업별 비정규직 규모 및 전년비 증감 (2025 vs 2026)</div>
+            <div class="card-subtitle">보건·사회복지업(186.7만명, +11.2만명) 압도적 1위 기록</div>
+          </div>
+        </div>
+        <div class="chart-container" style="height: 380px;" id="chart-industry-bars"></div>
+      </div>
+
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- TAB 4: 근로조건 및 임금격차 -->
+    <!-- ======================================================== -->
+    <div id="tab-conditions" class="tab-panel">
+      
+      <div class="grid-2">
+        <!-- Wage Gap Trend -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">월평균임금 및 정규-비정규 격차 추이 (2019 ~ 2026)</div>
+              <div class="card-subtitle">최근 3개월(6~8월) 월평균 세전임금 (단위: 만원)</div>
+            </div>
+          </div>
+          <div class="chart-container" style="height: 320px;" id="chart-wage-trend"></div>
+          <div class="legend" style="margin-top: 10px; justify-content: center;">
+            <div class="legend-item"><div class="legend-color" style="background:#1E40AF;"></div> 정규직 임금 (405.2만)</div>
+            <div class="legend-item"><div class="legend-color" style="background:#10B981;"></div> 임금근로자 전체 (330.5만)</div>
+            <div class="legend-item"><div class="legend-color" style="background:#EF4444;"></div> 비정규직 임금 (211.2만)</div>
+            <div class="legend-item"><div class="legend-color" style="background:#F59E0B;"></div> 임금 격차 (194.0만)</div>
+          </div>
+        </div>
+
+        <!-- Tenure & Hours -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">평균 근속기간 및 주당 취업시간 추이 (2019 ~ 2026)</div>
+              <div class="card-subtitle">정규직 근속기간 108개월(9년) vs 비정규직 36개월(3년)</div>
+            </div>
+          </div>
+          <div class="chart-container" style="height: 320px;" id="chart-tenure-hours"></div>
+          <div class="legend" style="margin-top: 10px; justify-content: center;">
+            <div class="legend-item"><div class="legend-color" style="background:#1E40AF;"></div> 정규직 근속(개월)</div>
+            <div class="legend-item"><div class="legend-color" style="background:#EF4444;"></div> 비정규직 근속(개월)</div>
+            <div class="legend-item"><div class="legend-color" style="background:#3B82F6;"></div> 정규직 주당시간</div>
+            <div class="legend-item"><div class="legend-color" style="background:#F59E0B;"></div> 비정규직 주당시간</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Social Insurance & Welfare Table -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">통계표 3. 임금근로자의 근로조건별 특성 종합표 (2019 ~ 2026)</div>
+            <div class="card-subtitle">사회보험 가입률 및 근로복지(퇴직급여, 상여금, 시간외수당, 유급휴가) 수혜율</div>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>조건분류</th>
+                <th>세부지표</th>
+                <th>고용형태</th>
+                <th>단위</th>
+                <th class="text-right">2019</th>
+                <th class="text-right">2020</th>
+                <th class="text-right">2021</th>
+                <th class="text-right">2022</th>
+                <th class="text-right">2023</th>
+                <th class="text-right">2024</th>
+                <th class="text-right">2025</th>
+                <th class="text-right">2026</th>
+                <th class="text-right">전년대비증감</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-conditions">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- TAB 5: 전국 17개 시도별 고용지도 -->
+    <!-- ======================================================== -->
+    <div id="tab-regions" class="tab-panel">
+      
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">통계표 4. 전국 17개 시도별 비정규직 비중 랭킹 (2026. 8.)</div>
+            <div class="card-subtitle">강원(49.0%), 전남(48.3%), 제주(43.9%) 순으로 비정규직 비중 높음</div>
+          </div>
+        </div>
+        <div class="chart-container" style="height: 480px;" id="chart-region-bars"></div>
+      </div>
+
+      <!-- Regional Table -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">전국 17개 시도별 비정규직 근로자 규모 및 증감 원표 (2025 ~ 2026)</div>
+          <span class="pill pill-blue">단위: 천명, %, %p</span>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>시도명</th>
+                <th class="text-right">2025 임금근로자</th>
+                <th class="text-right">2025 정규직</th>
+                <th class="text-right">2025 비정규직</th>
+                <th class="text-right">2025 비중(%)</th>
+                <th class="text-right">2026 임금근로자</th>
+                <th class="text-right">2026 정규직</th>
+                <th class="text-right">2026 비정규직</th>
+                <th class="text-right">2026 비중(%)</th>
+                <th class="text-right">임금근로자 증감</th>
+                <th class="text-right">비정규직 증감</th>
+                <th class="text-right">비중 증감(%p)</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-regions">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- TAB 6: 일자리선택 & 유연근무 -->
+    <!-- ======================================================== -->
+    <div id="tab-workstyle" class="tab-panel">
+      
+      <div class="grid-2">
+        <!-- Motivation -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">비정규직 일자리 형태 선택 동기 (2026. 8.)</div>
+              <div class="card-subtitle">자발적 선택(68.0%) vs 비자발적 선택(32.0%)</div>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 14px; padding: 10px 0;">
+            <div>
+              <div style="font-weight: 700; color: #1E40AF; margin-bottom: 6px;">[자발적 선택: 68.0% (+0.2%p)]</div>
+              <div style="font-size: 13px; display: flex; justify-content: space-between;">
+                <span>• 근로조건에 만족</span><strong>59.9%</strong>
+              </div>
+              <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 59.9%; background: #3B82F6;"></div></div>
+              
+              <div style="font-size: 13px; display: flex; justify-content: space-between; margin-top: 8px;">
+                <span>• 안정적인 일자리</span><strong>21.7%</strong>
+              </div>
+              <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 21.7%; background: #0D9488;"></div></div>
+
+              <div style="font-size: 13px; display: flex; justify-content: space-between; margin-top: 8px;">
+                <span>• 직장이동/가사병행</span><strong>11.4%</strong>
+              </div>
+              <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 11.4%; background: #6366F1;"></div></div>
+
+              <div style="font-size: 13px; display: flex; justify-content: space-between; margin-top: 8px;">
+                <span>• 노력한 만큼 수입/시간조절</span><strong>7.0%</strong>
+              </div>
+              <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 7.0%; background: #F59E0B;"></div></div>
+            </div>
+
+            <div style="border-top: 1px solid var(--gray-200); padding-top: 14px;">
+              <div style="font-weight: 700; color: #DC2626; margin-bottom: 6px;">[비자발적 선택: 32.0% (-0.2%p)]</div>
+              <div style="font-size: 13px; display: flex; justify-content: space-between;">
+                <span>• 당장 수입이 필요해서</span><strong>73.9%</strong>
+              </div>
+              <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 73.9%; background: #EF4444;"></div></div>
+
+              <div style="font-size: 13px; display: flex; justify-content: space-between; margin-top: 8px;">
+                <span>• 원하는 일자리가 없어서</span><strong>14.2%</strong>
+              </div>
+              <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 14.2%; background: #F97316;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flexible Work -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">유연근무제 활용 현황 및 세부 유형 (2026. 8.)</div>
+              <div class="card-subtitle">임금근로자 활용률 16.9% (+0.6%p)</div>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 12px; padding: 10px 0;">
+            <div style="font-size: 13px; font-weight: 700; color: var(--gray-800);">유연근무제 활용 유형별 비중 (중복응답)</div>
+            
+            <div style="font-size: 13px; display: flex; justify-content: space-between;">
+              <span>1. 시차출퇴근제</span><strong>34.9% (+1.7%p)</strong>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 34.9%; background: #1E40AF;"></div></div>
+
+            <div style="font-size: 13px; display: flex; justify-content: space-between;">
+              <span>2. 탄력적 근무제</span><strong>29.7% (-1.2%p)</strong>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 29.7%; background: #0D9488;"></div></div>
+
+            <div style="font-size: 13px; display: flex; justify-content: space-between;">
+              <span>3. 선택적 근무시간제</span><strong>27.1% (+0.4%p)</strong>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 27.1%; background: #3B82F6;"></div></div>
+
+            <div style="font-size: 13px; display: flex; justify-content: space-between;">
+              <span>4. 재택 및 원격 근무제</span><strong>13.6% (-0.6%p)</strong>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 13.6%; background: #8B5CF6;"></div></div>
+
+            <div style="font-size: 13px; display: flex; justify-content: space-between;">
+              <span>5. 근로시간 단축근무제</span><strong>13.3% (+1.1%p)</strong>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 13.3%; background: #EC4899;"></div></div>
+
+            <div style="background: #F8FAFC; padding: 12px; border-radius: 6px; border: 1px solid var(--gray-200); margin-top: 8px; font-size: 12px;">
+              <strong>향후 유연근무 희망률: 48.5%</strong><br>
+              희망 유형: 탄력적근무제(31.7%), 선택적근무(30.9%), 단축근무(27.2%) 순
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- TAB 7: 원천 데이터 뷰어 (DB) -->
+    <!-- ======================================================== -->
+    <div id="tab-data" class="tab-panel">
+      
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">대시보드 통합 Tidy Flat Data (DB) 검색 및 내보내기</div>
+            <div class="card-subtitle">BI 도구(Tableau, PowerBI, Excel Pivot)에 바로 사용할 수 있도록 1차원 정규화된 1,100+ 레코드 데이터</div>
+          </div>
+          <div>
+            <button class="btn" onclick="exportDataCSV()">📥 화면 데이터 CSV 다운로드</button>
+          </div>
+        </div>
+
+        <div class="filter-bar">
+          <input type="text" id="db-search" class="search-input" placeholder="키워드 검색 (예: 비정규직, 보건, 서울, 임금, 시간제...)" onkeyup="filterTidyTable()">
+          <select id="db-cat-filter" class="select-input" onchange="filterTidyTable()">
+            <option value="">모든 대분류 보기</option>
+            <option value="근로형태별규모">근로형태별규모 (통계표1)</option>
+            <option value="비정규직특성_시계열">비정규직특성_시계열 (통계표2)</option>
+            <option value="근로조건_시계열">근로조건_시계열 (통계표3)</option>
+            <option value="시도별고용">시도별고용 (통계표4)</option>
+          </select>
+          <select id="db-year-filter" class="select-input" onchange="filterTidyTable()">
+            <option value="">모든 연도</option>
+            <option value="2026">2026년</option>
+            <option value="2025">2025년</option>
+            <option value="2024">2024년</option>
+            <option value="2023">2023년</option>
+            <option value="2022">2022년</option>
+            <option value="2021">2021년</option>
+            <option value="2020">2020년</option>
+            <option value="2019">2019년</option>
+          </select>
+          <span id="record-count" style="align-self: center; font-size: 12px; color: var(--gray-500); font-weight: 600;">총 0건 조회됨</span>
+        </div>
+
+        <div class="table-wrapper" style="max-height: 520px; overflow-y: auto;">
+          <table>
+            <thead style="position: sticky; top: 0; z-index: 10;">
+              <tr>
+                <th>ID</th>
+                <th>대분류</th>
+                <th>중분류</th>
+                <th>소분류</th>
+                <th>구분1</th>
+                <th>구분2</th>
+                <th>연도</th>
+                <th>기준월</th>
+                <th>지표명</th>
+                <th>단위</th>
+                <th class="text-right">수치값</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-tidy">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>본 대시보드는 통계청 『2026년 8월 경제활동인구조사 근로형태별 부가조사 결과』(2026. 10. 21. 발표) 공식 보도자료 통계표를 바탕으로 제작되었습니다.</p>
+    <p style="margin-top: 4px;">저장 위치: work_261119/근로형태별_부가조사_대시보드/index.html &nbsp;|&nbsp; 엑셀 파일: 2026년_8월_경제활동인구조사_근로형태별_부가조사_대시보드_통계데이터.xlsx</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Tab Switching
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      
+      const targetPanel = document.getElementById(tabId);
+      if (targetPanel) targetPanel.classList.add('active');
+      
+      event.currentTarget.classList.add('active');
+
+      // Trigger redraw of charts on tab display
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+      }, 50);
+    }
+
+    // Tooltip Helpers
+    const tooltip = document.getElementById('tooltip');
+    function showTooltip(evt, text) {
+      tooltip.innerHTML = text;
+      tooltip.style.display = 'block';
+      tooltip.style.left = (evt.pageX + 12) + 'px';
+      tooltip.style.top = (evt.pageY - 28) + 'px';
+    }
+    function hideTooltip() {
+      tooltip.style.display = 'none';
+    }
+
+    // Number Formatters
+    function formatNum(num) {
+      if (num === null || num === undefined) return '-';
+      return Number(num).toLocaleString('ko-KR');
+    }
+
+    function formatFloat(num) {
+      if (num === null || num === undefined) return '-';
+      return Number(num).toFixed(1);
+    }
+
+    // ========================================================
+    // DATA STORE
+    // ========================================================
+    const YEARS = [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026];
+
+    // Table 1 Data
+    const TABLE1_DATA = [
+      { gender: "전체", type: "임금근로자", unit: "천명", vals: [20559, 20446, 20992, 21724, 21954, 22143, 22413, 22526] },
+      { gender: "전체", type: "정규직", unit: "천명", vals: [13078, 13020, 12927, 13568, 13832, 13685, 13845, 13855] },
+      { gender: "전체", type: "비정규직", unit: "천명", vals: [7481, 7426, 8066, 8156, 8122, 8459, 8568, 8671] },
+      { gender: "전체", type: "비정규직 비중", unit: "%", vals: [36.4, 36.3, 38.4, 37.5, 37.0, 38.2, 38.2, 38.5] },
+      { gender: "전체", type: "한시적근로자", unit: "천명", vals: [4785, 4608, 5171, 5348, 5259, 5628, 5848, 6035] },
+      { gender: "전체", type: "시간제근로자", unit: "천명", vals: [3156, 3252, 3512, 3687, 3873, 4256, 4229, 4382] },
+      { gender: "전체", type: "비전형근로자", unit: "천명", vals: [2045, 2073, 2278, 2131, 1957, 1903, 1834, 1786] },
+      { gender: "남자", type: "임금근로자", unit: "천명", vals: [11396, 11361, 11517, 11936, 11927, 11908, 11953, 11965] },
+      { gender: "남자", type: "정규직", unit: "천명", vals: [8040, 8027, 7941, 8283, 8370, 8293, 8302, 8258] },
+      { gender: "남자", type: "비정규직", unit: "천명", vals: [3356, 3335, 3575, 3653, 3557, 3615, 3650, 3708] },
+      { gender: "남자", type: "비정규직 비중", unit: "%", vals: [29.4, 29.4, 31.0, 30.6, 29.8, 30.4, 30.5, 31.0] },
+      { gender: "여자", type: "임금근로자", unit: "천명", vals: [9163, 9085, 9476, 9788, 10027, 10235, 10460, 10561] },
+      { gender: "여자", type: "정규직", unit: "천명", vals: [5038, 4994, 4985, 5285, 5462, 5392, 5543, 5597] },
+      { gender: "여자", type: "비정규직", unit: "천명", vals: [4125, 4091, 4491, 4503, 4565, 4844, 4918, 4963] },
+      { gender: "여자", type: "비정규직 비중", unit: "%", vals: [45.0, 45.0, 47.4, 46.0, 45.5, 47.3, 47.0, 47.0] }
+    ];
+
+    // Table 3 Conditions Data
+    const TABLE3_DATA = [
+      { cat: "근속기간", name: "평균 근속기간", type: "임금근로자", unit: "개월", vals: [71, 72, 70, 72, 74, 76, 78, 80] },
+      { cat: "근속기간", name: "평균 근속기간", type: "정규직", unit: "개월", vals: [94, 97, 96, 97, 98, 103, 105, 108] },
+      { cat: "근속기간", name: "평균 근속기간", type: "비정규직", unit: "개월", vals: [29, 29, 29, 30, 32, 34, 35, 36] },
+      { cat: "근속기간", name: "근속기간 격차", type: "정규-비정규 격차", unit: "개월", vals: [65, 68, 67, 67, 66, 69, 70, 72] },
+
+      { cat: "취업시간", name: "주당 평균 취업시간", type: "임금근로자", unit: "시간", vals: [35.9, 37.1, 35.4, 34.7, 33.9, 32.4, 33.4, 36.2] },
+      { cat: "취업시간", name: "주당 평균 취업시간", type: "정규직", unit: "시간", vals: [38.8, 40.7, 38.7, 37.8, 36.9, 35.4, 36.5, 40.4] },
+      { cat: "취업시간", name: "주당 평균 취업시간", type: "비정규직", unit: "시간", vals: [30.8, 30.7, 30.2, 29.6, 28.7, 27.6, 28.2, 29.5] },
+      { cat: "취업시간", name: "취업시간 격차", type: "정규-비정규 격차", unit: "시간", vals: [8.0, 10.0, 8.5, 8.2, 8.2, 7.8, 8.3, 10.9] },
+
+      { cat: "임금", name: "최근 3개월 월평균임금", type: "임금근로자", unit: "만원", vals: [264.3, 268.1, 273.4, 288.0, 300.7, 312.8, 320.5, 330.5] },
+      { cat: "임금", name: "최근 3개월 월평균임금", type: "정규직", unit: "만원", vals: [316.5, 323.4, 333.6, 348.0, 362.3, 379.6, 389.6, 405.2] },
+      { cat: "임금", name: "최근 3개월 월평균임금", type: "비정규직", unit: "만원", vals: [172.9, 171.1, 176.9, 188.1, 195.7, 204.8, 208.8, 211.2] },
+      { cat: "임금", name: "월평균임금 격차", type: "정규-비정규 격차", unit: "만원", vals: [143.6, 152.3, 156.7, 159.9, 166.6, 174.8, 180.8, 194.0] },
+
+      { cat: "사회보험", name: "국민연금 가입률", type: "정규직", unit: "%", vals: [87.5, 88.0, 88.8, 89.1, 88.0, 88.1, 87.9, 88.6] },
+      { cat: "사회보험", name: "국민연금 가입률", type: "비정규직", unit: "%", vals: [37.9, 37.8, 38.4, 38.3, 38.4, 37.5, 37.1, 36.5] },
+
+      { cat: "사회보험", name: "건강보험 가입률", type: "정규직", unit: "%", vals: [91.5, 92.6, 93.6, 94.5, 94.3, 95.0, 95.0, 95.7] },
+      { cat: "사회보험", name: "건강보험 가입률", type: "비정규직", unit: "%", vals: [48.0, 49.0, 50.3, 51.7, 52.6, 52.2, 53.2, 53.0] },
+
+      { cat: "사회보험", name: "고용보험 가입률", type: "정규직", unit: "%", vals: [87.2, 89.2, 90.9, 92.2, 91.9, 92.3, 91.8, 93.0] },
+      { cat: "사회보험", name: "고용보험 가입률", type: "비정규직", unit: "%", vals: [44.9, 46.1, 52.6, 54.0, 54.2, 54.7, 53.7, 54.0] },
+
+      { cat: "근로복지", name: "퇴직급여 수혜율", type: "정규직", unit: "%", vals: [91.7, 91.9, 93.5, 94.0, 94.5, 95.6, 95.6, 96.2] },
+      { cat: "근로복지", name: "퇴직급여 수혜율", type: "비정규직", unit: "%", vals: [42.9, 40.4, 42.7, 43.0, 45.3, 46.4, 46.0, 45.7] },
+
+      { cat: "근로복지", name: "상여금 수혜율", type: "정규직", unit: "%", vals: [86.4, 86.6, 86.7, 88.8, 88.1, 89.0, 89.0, 89.5] },
+      { cat: "근로복지", name: "상여금 수혜율", type: "비정규직", unit: "%", vals: [38.2, 37.6, 35.7, 38.5, 39.4, 40.1, 39.7, 39.2] },
+
+      { cat: "근로복지", name: "시간외수당 수혜율", type: "정규직", unit: "%", vals: [60.9, 62.8, 64.9, 67.5, 67.8, 68.7, 69.1, 69.9] },
+      { cat: "근로복지", name: "시간외수당 수혜율", type: "비정규직", unit: "%", vals: [25.9, 27.5, 27.6, 28.9, 30.5, 31.8, 31.2, 31.1] },
+
+      { cat: "근로복지", name: "유급휴가 수혜율", type: "정규직", unit: "%", vals: [80.1, 82.1, 83.3, 84.5, 85.6, 86.9, 87.2, 88.3] },
+      { cat: "근로복지", name: "유급휴가 수혜율", type: "비정규직", unit: "%", vals: [33.0, 34.1, 35.1, 35.9, 37.2, 38.7, 39.0, 38.4] }
+    ];
+
+    // Table 4 Regional Data
+    const TABLE4_DATA = [
+      { region: "전 국", t25: 22413, r25: 13845, nr25: 8568, t26: 22526, r26: 13855, nr26: 8671, dt: 113, dr: 10, dnr: 103 },
+      { region: "서 울", t25: 4375, r25: 2696, nr25: 1679, t26: 4326, r26: 2672, nr26: 1654, dt: -50, dr: -24, dnr: -26 },
+      { region: "부 산", t25: 1383, r25: 830, nr25: 553, t26: 1386, r26: 808, nr26: 578, dt: 3, dr: -22, dnr: 25 },
+      { region: "대 구", t25: 913, r25: 561, nr25: 353, t26: 908, r26: 540, nr26: 368, dt: -5, dr: -21, dnr: 16 },
+      { region: "인 천", t25: 1384, r25: 851, nr25: 533, t26: 1429, r26: 847, nr26: 582, dt: 45, dr: -3, dnr: 48 },
+      { region: "광 주", t25: 633, r25: 354, nr25: 278, t26: 633, r26: 360, nr26: 272, dt: 0, dr: 6, dnr: -6 },
+      { region: "대 전", t25: 643, r25: 385, nr25: 258, t26: 648, r26: 371, nr26: 278, dt: 6, dr: -15, dnr: 20 },
+      { region: "울 산", t25: 478, r25: 305, nr25: 173, t26: 485, r26: 290, nr26: 195, dt: 7, dr: -15, dnr: 22 },
+      { region: "세 종", t25: 177, r25: 124, nr25: 53, t26: 183, r26: 126, nr26: 57, dt: 6, dr: 2, dnr: 4 },
+      { region: "경 기", t25: 6320, r25: 4180, nr25: 2140, t26: 6403, r26: 4230, nr26: 2173, dt: 83, dr: 50, dnr: 33 },
+      { region: "강 원", t25: 611, r25: 294, nr25: 318, t26: 621, r26: 317, nr26: 304, dt: 10, dr: 24, dnr: -14 },
+      { region: "충 북", t25: 705, r25: 428, nr25: 277, t26: 706, r26: 425, nr26: 281, dt: 2, dr: -2, dnr: 4 },
+      { region: "충 남", t25: 938, r25: 566, nr25: 373, t26: 975, r26: 608, nr26: 367, dt: 37, dr: 42, dnr: -6 },
+      { region: "전 북", t25: 693, r25: 405, nr25: 288, t26: 685, r26: 397, nr26: 289, dt: -8, dr: -8, dnr: 0 },
+      { region: "전 남", t25: 631, r25: 316, nr25: 315, t26: 627, r26: 325, nr26: 303, dt: -4, dr: 9, dnr: -12 },
+      { region: "경 북", t25: 978, r25: 592, nr25: 386, t26: 960, r26: 565, nr26: 396, dt: -18, dr: -27, dnr: 10 },
+      { region: "경 남", t25: 1278, r25: 798, nr25: 480, t26: 1273, r26: 819, nr26: 454, dt: -5, dr: 21, dnr: -26 },
+      { region: "제 주", t25: 274, r25: 162, nr25: 112, t26: 278, r26: 156, nr26: 122, dt: 5, dr: -6, dnr: 10 }
+    ];
+
+    // Industry Data (17대 산업)
+    const INDUSTRY_DATA = [
+      { name: "보건사회복지업", y25: 1756, y26: 1867, diff: 112, share: 21.5 },
+      { name: "숙박음식업", y25: 813, y26: 856, diff: 43, share: 9.9 },
+      { name: "사업시설지원업", y25: 863, y26: 851, diff: -12, share: 9.8 },
+      { name: "도소매업", y25: 703, y26: 704, diff: 0, share: 8.1 },
+      { name: "교육서비스", y25: 713, y26: 691, diff: -22, share: 8.0 },
+      { name: "건설업", y25: 685, y26: 675, diff: -10, share: 7.8 },
+      { name: "제조업", y25: 656, y26: 664, diff: 8, share: 7.7 },
+      { name: "공공행정", y25: 398, y26: 376, diff: -22, share: 4.3 },
+      { name: "금융보험업", y25: 328, y26: 355, diff: 27, share: 4.1 },
+      { name: "운수창고업", y25: 342, y26: 347, diff: 5, share: 4.0 },
+      { name: "협회기타서비스", y25: 269, y26: 263, diff: -6, share: 3.0 },
+      { name: "전문과학기술업", y25: 250, y26: 249, diff: -1, share: 2.9 },
+      { name: "예술스포츠", y25: 207, y26: 244, diff: 38, share: 2.8 },
+      { name: "정보통신업", y25: 219, y26: 196, diff: -24, share: 2.3 },
+      { name: "부동산업", y25: 205, y26: 186, diff: -20, share: 2.1 },
+      { name: "기타", y25: 100, y26: 94, diff: -6, share: 1.1 },
+      { name: "농림어업", y25: 61, y26: 52, diff: -9, share: 0.6 }
+    ];
+
+    // ========================================================
+    // POPULATE TABLES
+    // ========================================================
+    function populateTrendTable() {
+      const tbody = document.getElementById('tbody-trend');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      TABLE1_DATA.forEach(row => {
+        const tr = document.createElement('tr');
+        const diff = (row.vals[7] - row.vals[6]).toFixed(1);
+        const rate = row.unit === '%' ? (diff > 0 ? `+${diff}%p` : `${diff}%p`) : `${((row.vals[7]-row.vals[6])/row.vals[6]*100).toFixed(1)}%`;
+        const isHighlight = row.type === '임금근로자' || row.type === '비정규직';
+
+        if (isHighlight) tr.classList.add('highlight-row');
+
+        tr.innerHTML = `
+          <td>${row.gender}</td>
+          <td class="font-bold">${row.type}</td>
+          ${row.vals.map(v => `<td class="text-right">${row.unit === '%' ? formatFloat(v) : formatNum(v)}</td>`).join('')}
+          <td class="text-right ${diff > 0 ? 'diff-up' : (diff < 0 ? 'diff-down' : '')}">${diff > 0 ? `+${diff}` : diff}</td>
+          <td class="text-right">${rate}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function populateConditionsTable() {
+      const tbody = document.getElementById('tbody-conditions');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      TABLE3_DATA.forEach(row => {
+        const tr = document.createElement('tr');
+        const diff = (row.vals[7] - row.vals[6]).toFixed(1);
+        const isGap = row.type.includes('격차');
+        if (isGap) tr.classList.add('highlight-row');
+
+        tr.innerHTML = `
+          <td>${row.cat}</td>
+          <td>${row.name}</td>
+          <td class="font-semibold">${row.type}</td>
+          <td>${row.unit}</td>
+          ${row.vals.map(v => `<td class="text-right">${row.unit === '개월' ? formatNum(v) : formatFloat(v)}</td>`).join('')}
+          <td class="text-right ${diff > 0 ? 'diff-up' : (diff < 0 ? 'diff-down' : '')}">${diff > 0 ? `+${diff}` : diff}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function populateRegionsTable() {
+      const tbody = document.getElementById('tbody-regions');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      TABLE4_DATA.forEach(row => {
+        const tr = document.createElement('tr');
+        const r25_ratio = (row.nr25 / row.t25 * 100).toFixed(1);
+        const r26_ratio = (row.nr26 / row.t26 * 100).toFixed(1);
+        const diff_ratio = (r26_ratio - r25_ratio).toFixed(1);
+        const isNat = row.region === '전 국';
+
+        if (isNat) tr.classList.add('highlight-row');
+
+        tr.innerHTML = `
+          <td class="font-bold">${row.region}</td>
+          <td class="text-right">${formatNum(row.t25)}</td>
+          <td class="text-right">${formatNum(row.r25)}</td>
+          <td class="text-right">${formatNum(row.nr25)}</td>
+          <td class="text-right font-semibold">${r25_ratio}%</td>
+          <td class="text-right">${formatNum(row.t26)}</td>
+          <td class="text-right">${formatNum(row.r26)}</td>
+          <td class="text-right">${formatNum(row.nr26)}</td>
+          <td class="text-right font-bold" style="color: #1E40AF;">${r26_ratio}%</td>
+          <td class="text-right ${row.dt > 0 ? 'diff-up' : (row.dt < 0 ? 'diff-down' : '')}">${row.dt > 0 ? `+${row.dt}` : row.dt}</td>
+          <td class="text-right ${row.dnr > 0 ? 'diff-up' : (row.dnr < 0 ? 'diff-down' : '')}">${row.dnr > 0 ? `+${row.dnr}` : row.dnr}</td>
+          <td class="text-right ${diff_ratio > 0 ? 'diff-up' : (diff_ratio < 0 ? 'diff-down' : '')}">${diff_ratio > 0 ? `+${diff_ratio}%p` : `${diff_ratio}%p`}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // ========================================================
+    // CHART RENDERING (PURE SVG, 100% OFFLINE)
+    // ========================================================
+    
+    // Overview Donut Chart
+    function renderOverviewTypesDonut() {
+      const el = document.getElementById('chart-overview-types');
+      if (!el) return;
+
+      const data = [
+        { label: "정규직", val: 13855, color: "#1E40AF", pct: "61.5%" },
+        { label: "한시적", val: 6035, color: "#0D9488", pct: "26.8%" },
+        { label: "시간제", val: 4382, color: "#F59E0B", pct: "19.5%" },
+        { label: "비전형", val: 1786, color: "#8B5CF6", pct: "7.9%" }
+      ];
+
+      // Draw SVG Horizontal Bar Chart for crisp readability
+      let html = `<svg viewBox="0 0 500 240" style="width:100%; height:100%;">`;
+      const maxVal = 14000;
+      data.forEach((d, idx) => {
+        const y = 25 + idx * 52;
+        const barWidth = (d.val / maxVal) * 330;
+        html += `
+          <text x="10" y="${y + 16}" font-size="12" font-weight="600" fill="#334155">${d.label}</text>
+          <rect x="75" y="${y}" width="340" height="24" rx="4" fill="#F1F5F9" />
+          <rect x="75" y="${y}" width="${barWidth}" height="24" rx="4" fill="${d.color}" 
+                onmousemove="showTooltip(event, '${d.label}: <strong>${formatNum(d.val)}천명</strong> (${d.pct})')" 
+                onmouseout="hideTooltip()" style="cursor:pointer; transition: width 0.8s ease;" />
+          <text x="${85 + barWidth}" y="${y + 17}" font-size="12" font-weight="700" fill="#0F172A">${formatNum(d.val)}천명 (${d.pct})</text>
+        `;
+      });
+      html += `</svg>`;
+      el.innerHTML = html;
+    }
+
+    // Overview Age Donut/Pie
+    function renderOverviewAgeDonut() {
+      const el = document.getElementById('chart-overview-age');
+      if (!el) return;
+
+      const data = [
+        { label: "60세이상", val: 3180, pct: 36.7, color: "#EF4444" },
+        { label: "50대", val: 1647, pct: 19.0, color: "#F59E0B" },
+        { label: "29세이하", val: 1482, pct: 17.1, color: "#3B82F6" },
+        { label: "40대", val: 1184, pct: 13.7, color: "#6366F1" },
+        { label: "30대", val: 1178, pct: 13.6, color: "#10B981" }
+      ];
+
+      let html = `<svg viewBox="0 0 500 250" style="width:100%; height:100%;">`;
+      // Donut center
+      const cx = 130, cy = 125, r = 85, innerR = 50;
+      let startAngle = -Math.PI / 2;
+
+      data.forEach(d => {
+        const sliceAngle = (d.pct / 100) * 2 * Math.PI;
+        const endAngle = startAngle + sliceAngle;
+
+        const x1 = cx + r * Math.cos(startAngle);
+        const y1 = cy + r * Math.sin(startAngle);
+        const x2 = cx + r * Math.cos(endAngle);
+        const y2 = cy + r * Math.sin(endAngle);
+
+        const ix1 = cx + innerR * Math.cos(endAngle);
+        const iy1 = cy + innerR * Math.sin(endAngle);
+        const ix2 = cx + innerR * Math.cos(startAngle);
+        const iy2 = cy + innerR * Math.sin(startAngle);
+
+        const largeArc = sliceAngle > Math.PI ? 1 : 0;
+        const pathData = `M ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2} L ${ix1} ${iy1} A ${innerR} ${innerR} 0 ${largeArc} 0 ${ix2} ${iy2} Z`;
+
+        html += `<path d="${pathData}" fill="${d.color}" stroke="#FFFFFF" stroke-width="2"
+                       onmousemove="showTooltip(event, '${d.label}: <strong>${formatNum(d.val)}천명</strong> (${d.pct}%)')"
+                       onmouseout="hideTooltip()" style="cursor:pointer;" />`;
+        startAngle = endAngle;
+      });
+
+      // Center text
+      html += `
+        <text x="${cx}" y="${cy - 4}" text-anchor="middle" font-size="11" fill="#64748B" font-weight="600">비정규직 총계</text>
+        <text x="${cx}" y="${cy + 16}" text-anchor="middle" font-size="14" fill="#0F172A" font-weight="800">867.1만</text>
+      `;
+
+      // Legend on the right side
+      data.forEach((d, i) => {
+        const ly = 40 + i * 36;
+        html += `
+          <rect x="260" y="${ly}" width="12" height="12" rx="3" fill="${d.color}" />
+          <text x="280" y="${ly + 10}" font-size="12" font-weight="600" fill="#334155">${d.label}</text>
+          <text x="430" y="${ly + 10}" font-size="12" font-weight="700" fill="#0F172A" text-anchor="end">${d.pct}% (${formatNum(d.val)}천명)</text>
+        `;
+      });
+
+      html += `</svg>`;
+      el.innerHTML = html;
+    }
+
+    // Insurance Gap Chart
+    function renderInsuranceChart() {
+      const el = document.getElementById('chart-overview-insurance');
+      if (!el) return;
+
+      const items = [
+        { name: "국민연금", reg: 88.6, nonReg: 36.5, gap: 52.1 },
+        { name: "건강보험", reg: 95.7, nonReg: 53.0, gap: 42.7 },
+        { name: "고용보험", reg: 93.0, nonReg: 54.0, gap: 39.0 }
+      ];
+
+      let html = `<svg viewBox="0 0 500 200" style="width:100%; height:100%;">`;
+      items.forEach((item, idx) => {
+        const y = 30 + idx * 56;
+        const regWidth = (item.reg / 100) * 320;
+        const nonRegWidth = (item.nonReg / 100) * 320;
+
+        html += `
+          <text x="10" y="${y + 14}" font-size="12" font-weight="700" fill="#1E293B">${item.name}</text>
+          
+          <!-- Reg Bar -->
+          <rect x="75" y="${y - 4}" width="${regWidth}" height="14" rx="3" fill="#1E40AF" 
+                onmousemove="showTooltip(event, '${item.name} 정규직: <strong>${item.reg}%</strong>')" onmouseout="hideTooltip()" style="cursor:pointer;" />
+          <text x="${82 + regWidth}" y="${y + 7}" font-size="10" font-weight="700" fill="#1E40AF">${item.reg}%</text>
+          
+          <!-- NonReg Bar -->
+          <rect x="75" y="${y + 14}" width="${nonRegWidth}" height="14" rx="3" fill="#EF4444"
+                onmousemove="showTooltip(event, '${item.name} 비정규직: <strong>${item.nonReg}%</strong> (격차 -${item.gap}%p)')" onmouseout="hideTooltip()" style="cursor:pointer;" />
+          <text x="${82 + nonRegWidth}" y="${y + 25}" font-size="10" font-weight="700" fill="#EF4444">${item.nonReg}%</text>
+          
+          <text x="490" y="${y + 16}" text-anchor="end" font-size="11" font-weight="700" fill="#DC2626">격차 ${item.gap}%p</text>
+        `;
+      });
+      html += `</svg>`;
+      el.innerHTML = html;
+    }
+
+    // Trend Main Chart (Line + Bar)
+    function renderTrendChart(filter = 'all') {
+      const el = document.getElementById('chart-trend-main');
+      if (!el) return;
+
+      let prefix = "전체";
+      if (filter === 'male') prefix = "남자";
+      if (filter === 'female') prefix = "여자";
+
+      const totalRow = TABLE1_DATA.find(r => r.gender === prefix && r.type === '임금근로자');
+      const regRow = TABLE1_DATA.find(r => r.gender === prefix && r.type === '정규직');
+      const nonRegRow = TABLE1_DATA.find(r => r.gender === prefix && r.type === '비정규직');
+      const shareRow = TABLE1_DATA.find(r => r.gender === prefix && r.type === '비정규직 비중');
+
+      const width = 800, height = 320;
+      const padLeft = 60, padRight = 60, padTop = 30, padBottom = 40;
+      const chartW = width - padLeft - padRight;
+      const chartH = height - padTop - padBottom;
+
+      const maxScale = Math.max(...totalRow.vals) * 1.1;
+      const minScale = 0;
+
+      let html = `<svg viewBox="0 0 ${width} ${height}" style="width:100%; height:100%;">`;
+
+      // Horizontal grid lines
+      for (let i = 0; i <= 5; i++) {
+        const val = Math.round(minScale + (maxScale / 5) * i);
+        const y = padTop + chartH - (i / 5) * chartH;
+        html += `
+          <line x1="${padLeft}" y1="${y}" x2="${padLeft + chartW}" y2="${y}" class="chart-grid-line" />
+          <text x="${padLeft - 10}" y="${y + 4}" class="chart-label" text-anchor="end">${formatNum(val)}</text>
+        `;
+      }
+
+      // X Axis years
+      const stepX = chartW / (YEARS.length - 1);
+      YEARS.forEach((yr, idx) => {
+        const x = padLeft + idx * stepX;
+        html += `
+          <text x="${x}" y="${padTop + chartH + 22}" class="chart-label" text-anchor="middle" font-weight="600">${yr}년</text>
+        `;
+      });
+
+      // Draw helper function for line
+      function buildPath(vals, color, strokeW = 3) {
+        let p = "";
+        vals.forEach((v, idx) => {
+          const x = padLeft + idx * stepX;
+          const y = padTop + chartH - ((v - minScale) / (maxScale - minScale)) * chartH;
+          p += (idx === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`);
+        });
+        return `<path d="${p}" fill="none" stroke="${color}" stroke-width="${strokeW}" />`;
+      }
+
+      html += buildPath(totalRow.vals, "#1E40AF", 3);
+      html += buildPath(regRow.vals, "#3B82F6", 2.5);
+      html += buildPath(nonRegRow.vals, "#EF4444", 3);
+
+      // Points & Tooltips
+      totalRow.vals.forEach((v, idx) => {
+        const x = padLeft + idx * stepX;
+        const yTot = padTop + chartH - ((v - minScale) / (maxScale - minScale)) * chartH;
+        const yReg = padTop + chartH - ((regRow.vals[idx] - minScale) / (maxScale - minScale)) * chartH;
+        const yNr = padTop + chartH - ((nonRegRow.vals[idx] - minScale) / (maxScale - minScale)) * chartH;
+
+        html += `
+          <circle cx="${x}" cy="${yTot}" r="4.5" fill="#1E40AF" stroke="#FFFFFF" stroke-width="2" 
+                  onmousemove="showTooltip(event, '${YEARS[idx]}년 임금근로자: <strong>${formatNum(v)}천명</strong>')" onmouseout="hideTooltip()" style="cursor:pointer;" />
+          <circle cx="${x}" cy="${yReg}" r="4" fill="#3B82F6" stroke="#FFFFFF" stroke-width="2"
+                  onmousemove="showTooltip(event, '${YEARS[idx]}년 정규직: <strong>${formatNum(regRow.vals[idx])}천명</strong>')" onmouseout="hideTooltip()" style="cursor:pointer;" />
+          <circle cx="${x}" cy="${yNr}" r="5" fill="#EF4444" stroke="#FFFFFF" stroke-width="2"
+                  onmousemove="showTooltip(event, '${YEARS[idx]}년 비정규직: <strong>${formatNum(nonRegRow.vals[idx])}천명</strong> (비중 ${shareRow.vals[idx]}%)')" onmouseout="hideTooltip()" style="cursor:pointer;" />
+        `;
+      });
+
+      html += `</svg>`;
+      el.innerHTML = html;
+    }
+
+    // Age Time Series Chart
+    function renderAgeTimeSeries() {
+      const el = document.getElementById('chart-age-timeseries');
+      if (!el) return;
+
+      const ageSeries = [
+        { name: "60세이상", vals: [25.9, 28.7, 29.8, 31.3, 32.2, 33.2, 35.5, 36.7], color: "#EF4444" },
+        { name: "50대", vals: [21.0, 20.8, 20.7, 21.1, 20.0, 19.6, 19.1, 19.0], color: "#F59E0B" },
+        { name: "40대", vals: [18.0, 17.6, 17.6, 16.2, 16.1, 15.5, 14.1, 13.7], color: "#10B981" },
+        { name: "30대", vals: [14.8, 13.8, 12.6, 12.0, 12.2, 12.7, 13.3, 13.6], color: "#06B6D4" },
+        { name: "20대", vals: [18.2, 17.3, 17.5, 17.3, 17.5, 17.3, 16.7, 15.5], color: "#3B82F6" }
+      ];
+
+      const width = 600, height = 300;
+      const padLeft = 45, padRight = 30, padTop = 20, padBottom = 35;
+      const chartW = width - padLeft - padRight;
+      const chartH = height - padTop - padBottom;
+      const maxScale = 40, minScale = 10;
+      const stepX = chartW / (YEARS.length - 1);
+
+      let html = `<svg viewBox="0 0 ${width} ${height}" style="width:100%; height:100%;">`;
+
+      for (let i = 0; i <= 6; i++) {
+        const val = minScale + (i * 5);
+        const y = padTop + chartH - ((val - minScale) / (maxScale - minScale)) * chartH;
+        html += `
+          <line x1="${padLeft}" y1="${y}" x2="${padLeft + chartW}" y2="${y}" class="chart-grid-line" />
+          <text x="${padLeft - 8}" y="${y + 4}" class="chart-label" text-anchor="end">${val}%</text>
+        `;
+      }
+
+      YEARS.forEach((yr, idx) => {
+        const x = padLeft + idx * stepX;
+        html += `<text x="${x}" y="${padTop + chartH + 20}" class="chart-label" text-anchor="middle">${yr}</text>`;
+      });
+
+      ageSeries.forEach(s => {
+        let p = "";
+        s.vals.forEach((v, idx) => {
+          const x = padLeft + idx * stepX;
+          const y = padTop + chartH - ((v - minScale) / (maxScale - minScale)) * chartH;
+          p += (idx === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`);
+        });
+        html += `<path d="${p}" fill="none" stroke="${s.color}" stroke-width="${s.name === '60세이상' ? 3.5 : 2}" />`;
+
+        s.vals.forEach((v, idx) => {
+          const x = padLeft + idx * stepX;
+          const y = padTop + chartH - ((v - minScale) / (maxScale - minScale)) * chartH;
+          html += `
+            <circle cx="${x}" cy="${y}" r="3.5" fill="${s.color}" stroke="#FFFFFF" stroke-width="1.5"
+                    onmousemove="showTooltip(event, '${YEARS[idx]}년 ${s.name}: <strong>${v}%</strong>')" onmouseout="hideTooltip()" style="cursor:pointer;" />
+          `;
+        });
+      });
+
+      html += `</svg>`;
+      el.innerHTML = html;
+    }
+
+    // Occupation Bar Chart
+    function renderOccupationBars() {
+      const el = document.getElementById('chart-occ-bars');
+      if (!el) return;
+
+      const occData = [
+        { name: "단순노무 종사자", share: 31.7, val: 2745, color: "#EF4444" },
+        { name: "서비스·판매 종사자", share: 27.1, val: 2346, color: "#F59E0B" },
+        { name: "관리자ㆍ전문가", share: 17.7, val: 1538, color: "#1E40AF" },
+        { name: "기능·기계조작", share: 12.6, val: 1090, color: "#6366F1" },
+        { name: "사무 종사자", share: 10.4, val: 903, color: "#0D9488" },
+        { name: "농림어업 숙련종사자", share: 0.6, val: 50, color: "#64748B" }
+      ];
+
+      let html = `<svg viewBox="0 0 500 280" style="width:100%; height:100%;">`;
+      occData.forEach((d, idx) => {
+        const y = 20 + idx * 42;
+        const barWidth = (d.share / 35) * 310;
+        html += `
+          <text x="10" y="${y + 15}" font-size="12" font-weight="600" fill="#334155">${d.name}</text>
+          <rect x="135" y="${y}" width="310" height="20" rx="3" fill="#F1F5F9" />
+          <rect x="135" y="${y}" width="${barWidth}" height="20" rx="3" fill="${d.color}" 
+                onmousemove="showTooltip(event, '${d.name}: <strong>${d.share}%</strong> (${formatNum(d.val)}천명)')" onmouseout="hideTooltip()" style="cursor:pointer;" />
+          <text x="${145 + barWidth}" y="${y + 14}" font-size="11" font-weight="700" fill="#0F172A">${d.share}%</text>
+        `;
+      });
+      html += `</svg>`;
+      el.innerHTML = html;
+    }
+
+    // Industry Bars Chart
+    function renderIndustryBars() {
+      const el = document.getElementById('chart-industry-bars');
+      if (!el) return;
+
+      let html = `<svg viewBox="0 0 900 360" style="width:100%; height:100%;">`;
+      const maxVal = 2000;
+      INDUSTRY_DATA.slice(0, 10).forEach((d, idx) => {
+        const y = 20 + idx * 34;
+        const barW = (d.y26 / maxVal) * 500;
+        html += `
+          <text x="10" y="${y + 14}" font-size="12" font-weight="600" fill="#1E293B">${idx+1}. ${d.name}</text>
+          <rect x="120" y="${y}" width="500" height="18" rx="3" fill="#F1F5F9" />
+          <rect x="120" y="${y}" width="${barW}" height="18" rx="3" fill="${idx === 0 ? '#1E40AF' : '#3B82F6'}"
+                onmousemove="showTooltip(event, '${d.name}: <strong>${formatNum(d.y26)}천명</strong> (${d.share}%, 증감 ${d.diff > 0 ? '+'+d.diff : d.diff}천명)')" 
+                onmouseout="hideTooltip()" style="cursor:pointer;" />
+          <text x="${130 + barW}" y="${y + 13}" font-size="11" font-weight="700" fill="#0F172A">${formatNum(d.y26)}천명 (${d.share}%)</text>
+          <text x="890" y="${y + 13}" text-anchor="end" font-size="11" font-weight="600" fill="${d.diff > 0 ? '#EF4444' : (d.diff < 0 ? '#3B82F6' : '#64748B')}">${d.diff > 0 ? '▲ +'+d.diff : (d.diff < 0 ? '▼ '+d.diff : '-')}</text>
+        `;
+      });
+      html += `</svg>`;
+      el.innerHTML = html;
+    }
+
+    // Wage Trend Chart
+    function renderWageTrend() {
+      const el = document.getElementById('chart-wage-trend');
+      if (!el) return;
+
+      const regWages = [316.5, 323.4, 333.6, 348.0, 362.3, 379.6, 389.6, 405.2];
+      const totWages = [264.3, 268.1, 273.4, 288.0, 300.7, 312.8, 320.5, 330.5];
+      const nonRegWages = [172.9, 171.1, 176.9, 188.1, 195.7, 204.8, 208.8, 211.2];
+      const gapWages = [143.6, 152.3, 156.7, 159.9, 166.6, 174.8, 180.8, 194.0];
+
+      const width = 600, height = 300;
+      const padLeft = 50, padRight = 30, padTop = 20, padBottom = 35;
+      const chartW = width - padLeft - padRight;
+      const chartH = height - padTop - padBottom;
+      const maxScale = 450, minScale = 120;
+      const stepX = chartW / (YEARS.length - 1);
+
+      let html = `<svg viewBox="0 0 ${width} ${height}" style="width:100%; height:100%;">`;
+
+      for (let i = 0; i <= 6; i++) {
+        const val = minScale + (i * 50);
+        const y = padTop + chartH - ((val - minScale) / (maxScale - minScale)) * chartH;
+        html += `
+          <line x1="${padLeft}" y1="${y}" x2="${padLeft + chartW}" y2="${y}" class="chart-grid-line" />
+          <text x="${padLeft - 8}" y="${y + 4}" class="chart-label" text-anchor="end">${val}만</text>
+        `;
+      }
+
+      YEARS.forEach((yr, idx) => {
+        const x = padLeft + idx * stepX;
+        html += `<text x="${x}" y="${padTop + chartH + 20}" class="chart-label" text-anchor="middle">${yr}</text>`;
+      });
+
+      function addLine(vals, color, w = 2.5) {
+        let p = "";
+        vals.forEach((v, idx) => {
+          const x = padLeft + idx * stepX;
+          const y = padTop + chartH - ((v - minScale) / (maxScale - minScale)) * chartH;
+          p += (idx === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`);
+        });
+        return `<path d="${p}" fill="none" stroke="${color}" stroke-width="${w}" />`;
+      }
+
+      html += addLine(regWages, "#1E40AF", 3);
+      html += addLine(totWages, "#10B981", 2.5);
+      html += addLine(nonRegWages, "#EF4444", 3);
+      html += addLine(gapWages, "#F59E0B", 2.5);
+
+      YEARS.forEach((yr, idx) => {
+        const x = padLeft + idx * stepX;
+        const yrY = padTop + chartH - ((regWages[idx] - minScale) / (maxScale - minScale)) * chartH;
+        const ynY = padTop + chartH - ((nonRegWages[idx] - minScale) / (maxScale - minScale)) * chartH;
+        const ygY = padTop + chartH - ((gapWages[idx] - minScale) / (maxScale - minScale)) * chartH;
+
+        html += `
+          <circle cx="${x}" cy="${yrY}" r="4" fill="#1E40AF" stroke="#FFFFFF" stroke-width="2" 
+                  onmousemove="showTooltip(event, '${yr}년 정규직: <strong>${regWages[idx]}만원</strong>')" onmouseout="hideTooltip()" style="cursor:pointer;" />
+          <circle cx="${x}" cy="${ynY}" r="4" fill="#EF4444" stroke="#FFFFFF" stroke-width="2" 
+                  onmousemove="showTooltip(event, '${yr}년 비정규직: <strong>${nonRegWages[idx]}만원</strong>')" onmouseout="hideTooltip()" style="cursor:pointer;" />
+          <circle cx="${x}" cy="${ygY}" r="4" fill="#F59E0B" stroke="#FFFFFF" stroke-width="2" 
+                  onmousemove="showTooltip(event, '${yr}년 격차: <strong>${gapWages[idx]}만원</strong>')" onmouseout="hideTooltip()" style="cursor:pointer;" />
+        `;
+      });
+
+      html += `</svg>`;
+      el.innerHTML = html;
+    }
+
+    // Tenure and Hours Chart
+    function renderTenureHours() {
+      const el = document.getElementById('chart-tenure-hours');
+      if (!el) return;
+
+      const regTenure = [94, 97, 96, 97, 98, 103, 105, 108];
+      const nonRegTenure = [29, 29, 29, 30, 32, 34, 35, 36];
+
+      const width = 600, height = 300;
+      const padLeft = 45, padRight = 30, padTop = 20, padBottom = 35;
+      const chartW = width - padLeft - padRight;
+      const chartH = height - padTop - padBottom;
+      const maxScale = 120, minScale = 0;
+      const stepX = chartW / (YEARS.length - 1);
+
+      let html = `<svg viewBox="0 0 ${width} ${height}" style="width:100%; height:100%;">`;
+
+      for (let i = 0; i <= 6; i++) {
+        const val = i * 20;
+        const y = padTop + chartH - (val / maxScale) * chartH;
+        html += `
+          <line x1="${padLeft}" y1="${y}" x2="${padLeft + chartW}" y2="${y}" class="chart-grid-line" />
+          <text x="${padLeft - 8}" y="${y + 4}" class="chart-label" text-anchor="end">${val}개월</text>
+        `;
+      }
+
+      YEARS.forEach((yr, idx) => {
+        const x = padLeft + idx * stepX;
+        html += `<text x="${x}" y="${padTop + chartH + 20}" class="chart-label" text-anchor="middle">${yr}</text>`;
+      });
+
+      function addLine(vals, color) {
+        let p = "";
+        vals.forEach((v, idx) => {
+          const x = padLeft + idx * stepX;
+          const y = padTop + chartH - (v / maxScale) * chartH;
+          p += (idx === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`);
+        });
+        return `<path d="${p}" fill="none" stroke="${color}" stroke-width="3" />`;
+      }
+
+      html += addLine(regTenure, "#1E40AF");
+      html += addLine(nonRegTenure, "#EF4444");
+
+      YEARS.forEach((yr, idx) => {
+        const x = padLeft + idx * stepX;
+        const yrY = padTop + chartH - (regTenure[idx] / maxScale) * chartH;
+        const ynY = padTop + chartH - (nonRegTenure[idx] / maxScale) * chartH;
+
+        html += `
+          <circle cx="${x}" cy="${yrY}" r="4" fill="#1E40AF" stroke="#FFFFFF" stroke-width="2" 
+                  onmousemove="showTooltip(event, '${yr}년 정규직 근속: <strong>${regTenure[idx]}개월 (${(regTenure[idx]/12).toFixed(1)}년)</strong>')" onmouseout="hideTooltip()" style="cursor:pointer;" />
+          <circle cx="${x}" cy="${ynY}" r="4" fill="#EF4444" stroke="#FFFFFF" stroke-width="2" 
+                  onmousemove="showTooltip(event, '${yr}년 비정규직 근속: <strong>${nonRegTenure[idx]}개월 (${(nonRegTenure[idx]/12).toFixed(1)}년)</strong>')" onmouseout="hideTooltip()" style="cursor:pointer;" />
+        `;
+      });
+
+      html += `</svg>`;
+      el.innerHTML = html;
+    }
+
+    // Regional Bars Chart
+    function renderRegionalBars() {
+      const el = document.getElementById('chart-region-bars');
+      if (!el) return;
+
+      // Filter out total & sort by non-reg ratio descending
+      const sorted = TABLE4_DATA.filter(r => r.region !== '전 국').map(r => {
+        return {
+          region: r.region,
+          ratio: Number((r.nr26 / r.t26 * 100).toFixed(1)),
+          nr: r.nr26,
+          t: r.t26,
+          diffRatio: Number(((r.nr26 / r.t26 * 100) - (r.nr25 / r.t25 * 100)).toFixed(1))
+        };
+      }).sort((a, b) => b.ratio - a.ratio);
+
+      let html = `<svg viewBox="0 0 900 460" style="width:100%; height:100%;">`;
+      sorted.forEach((d, idx) => {
+        const y = 20 + idx * 25;
+        const barW = (d.ratio / 60) * 580;
+        const isAboveAvg = d.ratio > 38.5;
+
+        html += `
+          <text x="10" y="${y + 13}" font-size="12" font-weight="${idx < 3 ? '800' : '600'}" fill="${idx < 3 ? '#DC2626' : '#334155'}">${idx+1}. ${d.region}</text>
+          <rect x="75" y="${y}" width="580" height="16" rx="3" fill="#F1F5F9" />
+          <rect x="75" y="${y}" width="${barW}" height="16" rx="3" fill="${isAboveAvg ? '#EF4444' : '#3B82F6'}" 
+                onmousemove="showTooltip(event, '${d.region}: 비정규직 비중 <strong>${d.ratio}%</strong> (${formatNum(d.nr)}천명 / 총 ${formatNum(d.t)}천명)<br>전년대비 비중 증감: ${d.diffRatio > 0 ? '+'+d.diffRatio : d.diffRatio}%p')" 
+                onmouseout="hideTooltip()" style="cursor:pointer;" />
+          <text x="${85 + barW}" y="${y + 12}" font-size="11" font-weight="700" fill="#0F172A">${d.ratio}%</text>
+          <text x="890" y="${y + 12}" text-anchor="end" font-size="11" font-weight="600" fill="${d.diffRatio > 0 ? '#DC2626' : (d.diffRatio < 0 ? '#2563EB' : '#64748B')}">${d.diffRatio > 0 ? '▲ +'+d.diffRatio+'%p' : (d.diffRatio < 0 ? '▼ '+d.diffRatio+'%p' : '-')}</text>
+        `;
+      });
+
+      // National Average Line (38.5%)
+      const avgX = 75 + (38.5 / 60) * 580;
+      html += `
+        <line x1="${avgX}" y1="10" x2="${avgX}" y2="445" stroke="#0F172A" stroke-width="1.5" stroke-dasharray="4,4" />
+        <text x="${avgX}" y="456" text-anchor="middle" font-size="11" font-weight="700" fill="#0F172A">전국 평균 38.5%</text>
+      `;
+
+      html += `</svg>`;
+      el.innerHTML = html;
+    }
+
+    // ========================================================
+    // TAB 7: TIDY DATA DB TABLE & EXPORT
+    // ========================================================
+    let rawTidyData = [];
+
+    function initTidyData() {
+      // Build in-memory dataset
+      let id = 1;
+
+      // Table 1
+      TABLE1_DATA.forEach(row => {
+        row.vals.forEach((v, idx) => {
+          rawTidyData.push({
+            id: id++,
+            cat1: "근로형태별규모",
+            cat2: "통계표1",
+            cat3: row.type,
+            dim1: row.gender,
+            dim2: row.unit,
+            year: YEARS[idx],
+            month: 8,
+            metric: "규모_또는_비중",
+            unit: row.unit,
+            val: v
+          });
+        });
+      });
+
+      // Table 3
+      TABLE3_DATA.forEach(row => {
+        row.vals.forEach((v, idx) => {
+          rawTidyData.push({
+            id: id++,
+            cat1: "근로조건_시계열",
+            cat2: row.cat,
+            cat3: row.name,
+            dim1: row.type,
+            dim2: "실측치",
+            year: YEARS[idx],
+            month: 8,
+            metric: row.name,
+            unit: row.unit,
+            val: v
+          });
+        });
+      });
+
+      // Table 4
+      TABLE4_DATA.forEach(row => {
+        [
+          { m: "임금근로자", u: "천명", v25: row.t25, v26: row.t26 },
+          { m: "정규직", u: "천명", v25: row.r25, v26: row.r26 },
+          { m: "비정규직", u: "천명", v25: row.nr25, v26: row.nr26 },
+          { m: "비정규직비중", u: "%", v25: (row.nr25/row.t25*100).toFixed(1), v26: (row.nr26/row.t26*100).toFixed(1) }
+        ].forEach(m => {
+          rawTidyData.push({
+            id: id++, cat1: "시도별고용", cat2: row.region, cat3: m.m, dim1: "전체", dim2: "시도별",
+            year: 2025, month: 8, metric: m.m, unit: m.u, val: m.v25
+          });
+          rawTidyData.push({
+            id: id++, cat1: "시도별고용", cat2: row.region, cat3: m.m, dim1: "전체", dim2: "시도별",
+            year: 2026, month: 8, metric: m.m, unit: m.u, val: m.v26
+          });
+        });
+      });
+
+      renderTidyTable(rawTidyData);
+    }
+
+    function renderTidyTable(data) {
+      const tbody = document.getElementById('tbody-tidy');
+      const countEl = document.getElementById('record-count');
+      if (!tbody) return;
+
+      countEl.innerText = `총 ${data.length.toLocaleString()}건 조회됨 (상위 200건 표시)`;
+      tbody.innerHTML = '';
+
+      data.slice(0, 200).forEach(d => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${d.id}</td>
+          <td><span class="pill pill-blue">${d.cat1}</span></td>
+          <td>${d.cat2}</td>
+          <td class="font-semibold">${d.cat3}</td>
+          <td>${d.dim1}</td>
+          <td>${d.dim2}</td>
+          <td>${d.year}년</td>
+          <td>${d.month}월</td>
+          <td>${d.metric}</td>
+          <td>${d.unit}</td>
+          <td class="text-right font-bold">${d.unit === '%' ? formatFloat(d.val) : formatNum(d.val)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterTidyTable() {
+      const q = document.getElementById('db-search').value.trim().toLowerCase();
+      const cat = document.getElementById('db-cat-filter').value;
+      const yr = document.getElementById('db-year-filter').value;
+
+      const filtered = rawTidyData.filter(d => {
+        if (cat && d.cat1 !== cat) return false;
+        if (yr && d.year.toString() !== yr) return false;
+        if (q) {
+          const str = `${d.cat1} ${d.cat2} ${d.cat3} ${d.dim1} ${d.dim2} ${d.metric} ${d.val}`.toLowerCase();
+          if (!str.includes(q)) return false;
+        }
+        return true;
+      });
+
+      renderTidyTable(filtered);
+    }
+
+    function exportDataCSV() {
+      const q = document.getElementById('db-search').value.trim().toLowerCase();
+      const cat = document.getElementById('db-cat-filter').value;
+      const yr = document.getElementById('db-year-filter').value;
+
+      const filtered = rawTidyData.filter(d => {
+        if (cat && d.cat1 !== cat) return false;
+        if (yr && d.year.toString() !== yr) return false;
+        if (q) {
+          const str = `${d.cat1} ${d.cat2} ${d.cat3} ${d.dim1} ${d.dim2} ${d.metric} ${d.val}`.toLowerCase();
+          if (!str.includes(q)) return false;
+        }
+        return true;
+      });
+
+      let csv = "ID,대분류,중분류,소분류,구분1,구분2,연도,기준월,지표명,단위,수치값\n";
+      filtered.forEach(d => {
+        csv += `"${d.id}","${d.cat1}","${d.cat2}","${d.cat3}","${d.dim1}","${d.dim2}","${d.year}","${d.month}","${d.metric}","${d.unit}","${d.val}"\n`;
+      });
+
+      const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `대시보드_추출데이터_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // ========================================================
+    // INITIALIZATION ON LOAD
+    // ========================================================
+    window.addEventListener('DOMContentLoaded', () => {
+      populateTrendTable();
+      populateConditionsTable();
+      populateRegionsTable();
+      initTidyData();
+
+      // Render Charts
+      renderOverviewTypesDonut();
+      renderOverviewAgeDonut();
+      renderInsuranceChart();
+      renderTrendChart('all');
+      renderAgeTimeSeries();
+      renderOccupationBars();
+      renderIndustryBars();
+      renderWageTrend();
+      renderTenureHours();
+      renderRegionalBars();
+    });
+
+    window.addEventListener('resize', () => {
+      renderOverviewTypesDonut();
+      renderOverviewAgeDonut();
+      renderInsuranceChart();
+      renderTrendChart('all');
+      renderAgeTimeSeries();
+      renderOccupationBars();
+      renderIndustryBars();
+      renderWageTrend();
+      renderTenureHours();
+      renderRegionalBars();
+    });
+  </script>
+</body>
+</html>
